@@ -1,96 +1,329 @@
-<br clear="both">
+import { useEffect, useState } from "react";
 
-<div align="center">
-  <img height="300" width="600" src="https://user-images.githubusercontent.com/74038190/225813708-98b745f2-7d22-48cf-9150-083f1b00d6c9.gif"  />
-</div>
+/* =========================
+   ТИПЫ
+========================= */
 
-###
+type Metric = {
+  users: number;
+  revenue: number;
+  requests: number;
+};
 
-<h1 align="center">Привет👋 Меня зовут Александр!</h1>
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+  stack: string[];
+};
 
-###
+/* =========================
+   МОДЕЛЬ API (эмуляция backend)
+========================= */
 
-<div align="center">
-  <a href="https://www.youtube.com/@tehno.maniak" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=Youtube&logo=youtube&label=&color=FF0000&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="youtube logo"  />
-  </a>
-  <a href="https://t.me/tehnomaniak07" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=Telegram&logo=telegram&label=&color=2CA5E0&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="telegram logo"  />
-  </a>
-</div>
+const api = {
+  async getMetrics(): Promise<Metric> {
+    return new Promise((res) =>
+      setTimeout(
+        () =>
+          res({
+            users: 18240,
+            revenue: 640000,
+            requests: 1200340,
+          }),
+        700
+      )
+    );
+  },
 
-###
+  async getProjects(): Promise<Project[]> {
+    return new Promise((res) =>
+      setTimeout(
+        () =>
+          res([
+            {
+              id: 1,
+              title: "TaskFlow SaaS",
+              description:
+                "Масштабируемая система управления задачами с авторизацией и API.",
+              stack: ["React", "TypeScript", "Zustand", "REST API"],
+            },
+            {
+              id: 2,
+              title: "Крипто-аналитика",
+              description:
+                "Дашборд с графиками и интеграцией внешних API в реальном времени.",
+              stack: ["React", "Chart.js", "API", "TypeScript"],
+            },
+            {
+              id: 3,
+              title: "E-commerce интерфейс",
+              description:
+                "Масштабируемый интерфейс интернет-магазина с корзиной.",
+              stack: ["React", "Redux", "TypeScript"],
+            },
+          ]),
+        600
+      )
+    );
+  },
+};
 
-<div align="center">
-  <img src="https://visitor-badge.laobi.icu/badge?page_id=filimonovalexey.filimonovalexey&"  />
-</div>
+/* =========================
+   ПРИЛОЖЕНИЕ
+========================= */
 
-###
+export default function ПортфолиоFrontend() {
+  const [метрики, setМетрики] = useState<Metric | null>(null);
+  const [проекты, setПроекты] = useState<Project[]>([]);
+  const [загрузка, setЗагрузка] = useState(true);
+  const [сообщение, setСообщение] = useState("");
 
-<h3 align="left">👩‍💻  Обо мне</h3>
+  /* =========================
+     ЗАГРУЗКА ДАННЫХ
+  ========================= */
 
-###
+  useEffect(() => {
+    async function загрузить() {
+      setЗагрузка(true);
 
-<a href="https://t.me/Ninjap3" target="_blank">
-  <img src="https://cdn-icons-png.flaticon.com/512/2504/2111/2111646.png"
+      const [m, p] = await Promise.all([
+        api.getMetrics(),
+        api.getProjects(),
+      ]);
 
-<p align="left">Я начинающий Frontend разработчик. Мой путь начался ещё с детской мечты стать программитсом. Был промежуток в пару месяцев, где я пробовал себя во многих направлениях, пробовал изучать язык С, С++, Python, попробовал свои силы в data science, но больше всего меня зацепила Frontend разработка! С мая 2022 года по апрель 2023 я изучал Frontend разработку на курсах Яндекс Практикум. В настоящий момент мое обучение на курсе завершено и я нашел свою первую работу!<br><br>● 🔭 Участвовал в бассейне Школы 21 от Сбера.<br>● 📚 Завершил курсы по веб-разработке Яндекс Практикум!<br>● ⚡ Хочу освоить новую профессию и найти раоту.</p>
+      setМетрики(m);
+      setПроекты(p);
+      setЗагрузка(false);
+    }
 
-###
-<h3 align="left">📕 Мои статьи</h3>
+    загрузить();
+  }, []);
 
-- [Пишем Telegram-бота для подготовки к собеседованию на Frontend-разработчика](https://proglib.io/p/pishem-telegram-bota-dlya-podgotovki-k-sobesedovaniyu-na-frontend-razrabotchika-2024-05-29)
-- [Пишем Telegram-бота для фильтрации нецензурной лексики в чате](https://proglib.io/p/pishem-telegram-bota-dlya-filtracii-necenzurnoy-leksiki-v-chate-2024-07-15)
+  /* =========================
+     ФОРМА КОНТАКТА
+  ========================= */
 
-###
+  function отправить(e: React.FormEvent) {
+    e.preventDefault();
 
-<p align="center">
- <img width="600" src="assets/github-snake.svg" alt="snake"/>
-</p>
+    if (!сообщение) return alert("Введите сообщение");
 
-###
+    alert("Сообщение отправлено!");
+    setСообщение("");
+  }
 
-<h3 align="left">🛠 Технологии:</h3>
+  /* =========================
+     UI
+  ========================= */
 
-###
+  return (
+    <div style={styles.app}>
+      
+      {/* НАВИГАЦИЯ */}
+      <header style={styles.nav}>
+        <h2>Портфолио Frontend-разработчика</h2>
 
-<div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" height="40" alt="html5 logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" height="40" alt="css3 logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="40" alt="react logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=vite" height="40" alt="vite logo"  />
-  <img width="12" />
-  <img src="https://cdn.simpleicons.org/webpack/8DD6F9" height="40" alt="webpack logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=wordpress" height="40" alt="wordpress logo"  />
-  <img width="12" />
-  <img src="https://cdn.simpleicons.org/gnubash/4EAA25" height="40" alt="bash logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=py" height="40" alt="python logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=postgres" height="40" alt="postgresql logo"  />
-</div>
+        <nav style={styles.links}>
+          <a href="#метрики">Метрики</a>
+          <a href="#проекты">Проекты</a>
+          <a href="#контакты">Контакты</a>
+        </nav>
+      </header>
 
-###
+      {/* ГЛАВНЫЙ ЭКРАН */}
+      <section style={styles.hero}>
+        <h1>Frontend разработчик (React / TypeScript)</h1>
 
-<h3 align="left">🔥   Моя статистика :</h3>
+        <p>
+          Разрабатываю масштабируемые фронтенд-системы, архитектуру
+          и высокопроизводительные веб-приложения.
+        </p>
 
-###
+        <div style={styles.socials}>
+          <a href="https://github.com/yourname">GitHub</a>
+          <a href="https://linkedin.com/in/yourname">LinkedIn</a>
+          <a href="https://t.me/yourname">Telegram</a>
+        </div>
+      </section>
 
-<div align="center">
-  <img src="https://streak-stats.demolab.com?user=filimonovalexey&locale=en&mode=daily&theme=dark&hide_border=false&border_radius=5&order=3" height="220" alt="streak graph"  />
-</div>
+      {/* МЕТРИКИ */}
+      <section id="метрики" style={styles.section}>
+        <h2>Системные метрики</h2>
 
-###
+        {загрузка && <p>Загрузка данных...</p>}
 
-<div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=filimonovalexey&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=dracula&locale=en&hide_border=false&order=1" height="150" alt="stats graph"  />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs?username=filimonovalexey&locale=en&hide_title=false&layout=compact&card_width=320&langs_count=5&theme=dracula&hide_border=false&order=2" height="150" alt="languages graph"  />
-</div>
+        {метрики && (
+          <div style={styles.grid}>
+            <div style={styles.card}>
+              <h3>Пользователи</h3>
+              <p>{метрики.users}</p>
+            </div>
 
-###
+            <div style={styles.card}>
+              <h3>Доход</h3>
+              <p>${метрики.revenue}</p>
+            </div>
+
+            <div style={styles.card}>
+              <h3>Запросы</h3>
+              <p>{метрики.requests}</p>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ПРОЕКТЫ */}
+      <section id="проекты" style={styles.section}>
+        <h2>Архитектурные проекты</h2>
+
+        {загрузка ? (
+          <p>Загрузка проектов...</p>
+        ) : (
+          <div style={styles.grid}>
+            {проекты.map((p) => (
+              <div key={p.id} style={styles.card}>
+                <h3>{p.title}</h3>
+                <p>{p.description}</p>
+
+                <div style={styles.stack}>
+                  {p.stack.map((t) => (
+                    <span key={t} style={styles.tag}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ПОДХОД */}
+      <section style={styles.section}>
+        <h2>Инженерный подход</h2>
+
+        <ul>
+          <li>Масштабируемая архитектура фронтенда</li>
+          <li>Переиспользуемые компоненты</li>
+          <li>Оптимизация производительности</li>
+          <li>UI на основе API</li>
+        </ul>
+      </section>
+
+      {/* КОНТАКТ */}
+      <section id="контакты" style={styles.section}>
+        <h2>Контакты</h2>
+
+        <form onSubmit={отправить} style={styles.form}>
+          <textarea
+            value={сообщение}
+            onChange={(e) => setСообщение(e.target.value)}
+            placeholder="Введите сообщение..."
+            style={styles.textarea}
+          />
+
+          <button type="submit" style={styles.button}>
+            Отправить
+          </button>
+        </form>
+
+        <p>Email: frontend.dev@example.com</p>
+      </section>
+
+      {/* ФУТЕР */}
+      <footer style={styles.footer}>
+        <p>© 2026 Портфолио Frontend-разработчика</p>
+      </footer>
+    </div>
+  );
+}
+
+/* =========================
+   СТИЛИ
+========================= */
+
+const styles: Record<string, React.CSSProperties> = {
+  app: {
+    fontFamily: "Arial",
+    background: "#0f0f0f",
+    color: "#fff",
+    minHeight: "100vh",
+  },
+
+  nav: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "20px",
+    borderBottom: "1px solid #333",
+  },
+
+  links: {
+    display: "flex",
+    gap: "15px",
+  },
+
+  hero: {
+    padding: "80px",
+    textAlign: "center",
+  },
+
+  socials: {
+    marginTop: "15px",
+    display: "flex",
+    justifyContent: "center",
+    gap: "15px",
+  },
+
+  section: {
+    padding: "50px",
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "20px",
+  },
+
+  card: {
+    border: "1px solid #333",
+    padding: "20px",
+    borderRadius: "10px",
+  },
+
+  stack: {
+    marginTop: "10px",
+    display: "flex",
+    gap: "5px",
+    flexWrap: "wrap",
+  },
+
+  tag: {
+    border: "1px solid #555",
+    padding: "4px 8px",
+    fontSize: "12px",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    maxWidth: "400px",
+  },
+
+  textarea: {
+    height: "100px",
+    padding: "10px",
+  },
+
+  button: {
+    padding: "10px",
+    cursor: "pointer",
+  },
+
+  footer: {
+    textAlign: "center",
+    padding: "30px",
+    borderTop: "1px solid #333",
+  },
+};
